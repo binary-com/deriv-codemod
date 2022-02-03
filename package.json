@@ -1,0 +1,30 @@
+{
+  "name": "@deriv/codemod",
+  "version": "1.0.0",
+  "description": "A tool for helping migrate code",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "@deriv/codemod": "./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/binary-com/deriv-codemod.git"
+  },
+  "author": "bala.krishna@deriv.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/binary-com/deriv-codemod/issues"
+  },
+  "homepage": "https://github.com/binary-com/deriv-codemod#readme",
+  "dependencies": {
+    "fast-glob": "^3.2.11",
+    "inquirer": "^8.2.0",
+    "jscodeshift": "^0.13.1"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^8.2.0",
+    "@types/node": "^17.0.14"
+  }
+}
