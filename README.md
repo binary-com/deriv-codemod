@@ -36,6 +36,10 @@ deriv-codemod
     - For `PropTypes.func`, it will insert an empty anonymous arrow fn type `() => void`.
     - For `PropTypes.object` or `PropTypes.array`, it maps unknown as respective TS type.
     - It also supports `PropTypes.oneOfTypes` which will map it to TS union types.
+    
+  - Sample conversion:
+    ![image](https://user-images.githubusercontent.com/56330681/152483079-fff0639c-3f43-43fc-9510-9feb6f7e89a6.png)
+
 
 ## Local development
 
