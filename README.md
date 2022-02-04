@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://www.npmjs.com/package/deriv-codemod" target="_blank" >
+    <img src="https://badge.fury.io/js/deriv-codemod.svg" alt="npm version">
+  </a>
+</p>
+
 `deriv-codemod` is a tool for helping migrate code. It uses [jscodeshift](https://github.com/facebook/jscodeshift) internally to transform the source code.
 
 ## Installation
