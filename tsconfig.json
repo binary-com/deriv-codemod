@@ -16,6 +16,5 @@
     "moduleResolution": "Node",
     "skipDefaultLibCheck": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["**/*.js"]
+  "include": ["src/**/*.ts", "src/**/*.js"]
 }

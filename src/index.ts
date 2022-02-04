@@ -102,7 +102,7 @@ Commit your changes, then re-run this script.
       break;
     case "Convert proptypes to TS":
       runCodemod = async (path: string) => {
-        await runJscodeshift(path, "proptypes-to-ts.ts");
+        await runJscodeshift(path, "proptypes-to-ts.js");
       };
       break;
   }
