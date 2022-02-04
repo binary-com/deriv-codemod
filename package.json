@@ -1,5 +1,5 @@
 {
-  "name": "@deriv/codemod",
+  "name": "deriv-codemod",
   "version": "1.0.0",
   "description": "A tool for helping migrate code",
   "bin": {
