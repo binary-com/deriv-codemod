@@ -175,6 +175,10 @@ module.exports = function (file, api, options) {
         const unionTypes = [];
         j(value)
           .find(j.MemberExpression)
+          .filter(
+            (subpath) =>
+              !["oneOf", "oneOfType"].includes(subpath.value?.property?.name)
+          )
           .forEach((subpath) => {
             unionTypes.push(getTsSingleType(subpath.value));
           });
