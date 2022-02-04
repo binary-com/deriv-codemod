@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import util from "util";
 import child_process from "child_process";
 import fg from "fast-glob";
@@ -54,7 +56,7 @@ const runJscodeshift = async (file_path: string, codemod_path: string) => {
 async function init() {
   let runCodemod: ((path: string) => Promise<void>) | null = null;
 
-  process.stdout.write("Welcome to @deriv/codemod! :D\n");
+  process.stdout.write("Welcome to deriv-codemod! :D\n");
 
   const { source } = await inquirer.prompt<{ source: string }>([
     source_question,

@@ -1,6 +1,6 @@
 {
   "name": "deriv-codemod",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A tool for helping migrate code",
   "bin": {
     "deriv-codemod": "./dist/index.js"
