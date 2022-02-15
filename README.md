@@ -21,8 +21,11 @@ Just run the below command to get started.
 ```sh
 deriv-codemod
 ```
+## How to use
 
-### List of codemods available
+Read about how to use the command [here](https://github.com/binary-com/deriv-codemod/blob/master/HOW-TO-USE.md).
+
+## List of codemods available
 
 - **Change extension**
 
