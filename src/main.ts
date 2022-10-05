@@ -5,10 +5,10 @@ import { name, version } from '../package.json';
 
 const program = new commander.Command();
 
+// Commands
 changeExtension(program);
 toTS(program);
 
 program.name(name);
 program.version(version);
-
 program.parse();

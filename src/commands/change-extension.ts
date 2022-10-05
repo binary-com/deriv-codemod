@@ -5,14 +5,7 @@ import util from 'util';
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
-import { prompt } from 'enquirer';
-import { source, select_target_extension } from '../utils/prompt';
-import { files, checkFileExistence } from '../utils';
-
-interface TResponse {
-    source: string;
-    extension: string;
-}
+import { files, checkFileExistence, handleResponse, TResponse } from '../utils';
 
 const rename = util.promisify(fs.rename);
 
@@ -37,30 +30,7 @@ const changeExtension = (program: any) => {
         .option('-s, --source [source]', 'Source to the file(s)')
         .option('-e, --extension [ext]', 'Target Extension')
         .action(async (options: any, stdout: any) => {
-            const hasDot = stdout.args.includes('.');
-            const questions = [];
-            const response: TResponse = {
-                extension: 'tsx',
-                source   : '',
-            };
-
-            // Add Questions
-            if (!options.source && hasDot === false) {
-                questions.push(source);
-            }
-            if (!options.extension) {
-                questions.push(select_target_extension);
-            }
-
-            // Assign Response
-            if (questions.length) {
-                const prp: TResponse = await prompt(questions);
-                response.extension = prp.extension;
-                response.source = prp.source;
-            } else {
-                response.extension = options.extension;
-                response.source = hasDot ? process.cwd() : options.source;
-            }
+            const response: TResponse = await handleResponse(options, stdout, ['source', 'extension']);
 
             // Process Files
             const inputFiles = files(response.source);

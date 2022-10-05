@@ -5,15 +5,8 @@ import chalk from 'chalk';
 import path from 'path';
 import util from 'util';
 import child_process from 'child_process';
-import { prompt } from 'enquirer';
-import { source } from '../utils/prompt';
-import { files, checkFileExistence } from '../utils';
+import { files, checkFileExistence, handleResponse, TResponse } from '../utils';
 import { changeFileExtension } from './change-extension';
-
-interface TResponse {
-    source: string;
-    extension: string;
-}
 
 const exec = util.promisify(child_process.exec);
 
@@ -43,28 +36,7 @@ const toTS = (program: any) => {
         .option('-s, --source [source]', 'Source to the file(s)')
         .option('-e, --extension [extension]', 'Change extension of the file')
         .action(async (options: any, stdout: any) => {
-            const hasDot = stdout.args.includes('.');
-            const questions = [];
-            const response: TResponse = {
-                extension: '',
-                source   : '',
-            };
-
-            // Add Questions
-            if (!options.source && hasDot === false) {
-                questions.push(source);
-            }
-            if (options.extension !== '') {
-                response.extension = options.extension;
-            }
-
-            // Assign Response
-            if (questions.length) {
-                const prp: TResponse = await prompt(questions);
-                response.source = prp.source;
-            } else {
-                response.source = hasDot ? process.cwd() : options.source;
-            }
+            const response: TResponse = await handleResponse(options, stdout, ['source']);
             
             // Process Files
             const inputFiles = files(response.source);

@@ -4,6 +4,42 @@
 import fg from 'fast-glob';
 import isGitDirty from 'is-git-dirty';
 import path from 'path';
+import { prompt } from 'enquirer';
+import { source, select_target_extension } from '../utils/prompt';
+
+export type TResponse = {
+    source: string;
+    extension: string;
+}
+
+export const handleResponse = async (options: any, stdout: any, q: string[]) => {
+    const hasDot = stdout.args.includes('.');
+    const questions = [];
+    const response: TResponse = {
+        extension: '',
+        source   : '',
+    };
+
+    // Add Questions
+    if (!options.source && hasDot === false && q.includes('source')) {
+        questions.push(source);
+    }
+    if (!options.extension && q.includes('extension')) {
+        questions.push(select_target_extension);
+    }
+
+    // Assign Response
+    if (questions.length) {
+        const prp: TResponse = await prompt(questions);
+        response.extension = prp.extension;
+        response.source = prp.source;
+    } else {
+        response.extension = options.extension;
+        response.source = hasDot ? process.cwd() : options.source;
+    }
+
+    return response;
+};
 
 export const files = (source: string) => {
     return fg.sync(source.trim(), {
