@@ -6,9 +6,9 @@ var util = require('util');
 var fs = require('fs');
 var path = require('path');
 var chalk = require('chalk');
-var enquirer = require('enquirer');
 var fg = require('fast-glob');
 var isGitDirty = require('is-git-dirty');
+var enquirer = require('enquirer');
 var child_process = require('child_process');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -52,6 +52,34 @@ const select_target_extension = {
 };
 
 /* -------------------------------------------------------------------------- */
+const handleResponse = async (options, stdout, q) => {
+  const hasDot = stdout.args.includes('.');
+  const questions = [];
+  const response = {
+    extension: '',
+    source: ''
+  }; // Add Questions
+
+  if (!options.source && hasDot === false && q.includes('source')) {
+    questions.push(source);
+  }
+
+  if (!options.extension && q.includes('extension')) {
+    questions.push(select_target_extension);
+  } // Assign Response
+
+
+  if (questions.length) {
+    const prp = await enquirer.prompt(questions);
+    response.extension = prp.extension;
+    response.source = prp.source;
+  } else {
+    response.extension = options.extension;
+    response.source = hasDot ? process.cwd() : options.source;
+  }
+
+  return response;
+};
 const files = source => {
   return fg__default["default"].sync(source.trim(), {
     absolute: true,
@@ -89,31 +117,7 @@ const changeFileExtension = async (file_path, extension) => {
 
 const changeExtension = program => {
   program.command('ext').description('Change extension of the file(s)').option('-s, --source [source]', 'Source to the file(s)').option('-e, --extension [ext]', 'Target Extension').action(async (options, stdout) => {
-    const hasDot = stdout.args.includes('.');
-    const questions = [];
-    const response = {
-      extension: 'tsx',
-      source: ''
-    }; // Add Questions
-
-    if (!options.source && hasDot === false) {
-      questions.push(source);
-    }
-
-    if (!options.extension) {
-      questions.push(select_target_extension);
-    } // Assign Response
-
-
-    if (questions.length) {
-      const prp = await enquirer.prompt(questions);
-      response.extension = prp.extension;
-      response.source = prp.source;
-    } else {
-      response.extension = options.extension;
-      response.source = hasDot ? process.cwd() : options.source;
-    } // Process Files
-
+    const response = await handleResponse(options, stdout, ['source', 'extension']); // Process Files
 
     const inputFiles = files(response.source);
     await checkFileExistence(inputFiles, true); // Run Command
@@ -158,29 +162,7 @@ const runJscodeshift = async (file_path, file_extension) => {
 
 const toTS = program => {
   program.command('pts').description('Migrate from js(x) to ts(x)').option('-s, --source [source]', 'Source to the file(s)').option('-e, --extension [extension]', 'Change extension of the file').action(async (options, stdout) => {
-    const hasDot = stdout.args.includes('.');
-    const questions = [];
-    const response = {
-      extension: '',
-      source: ''
-    }; // Add Questions
-
-    if (!options.source && hasDot === false) {
-      questions.push(source);
-    }
-
-    if (options.extension !== '') {
-      response.extension = options.extension;
-    } // Assign Response
-
-
-    if (questions.length) {
-      const prp = await enquirer.prompt(questions);
-      response.source = prp.source;
-    } else {
-      response.source = hasDot ? process.cwd() : options.source;
-    } // Process Files
-
+    const response = await handleResponse(options, stdout, ['source']); // Process Files
 
     const inputFiles = files(response.source);
     await checkFileExistence(inputFiles, true); // Run Command
@@ -203,7 +185,8 @@ const toTS = program => {
 var name = "deriv-codemod";
 var version = "1.1.0";
 
-const program = new commander__default["default"].Command();
+const program = new commander__default["default"].Command(); // Commands
+
 changeExtension(program);
 toTS(program);
 program.name(name);
