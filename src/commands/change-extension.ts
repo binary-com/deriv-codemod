@@ -1,13 +1,13 @@
 /* -------------------------------------------------------------------------- */
 /* SAMPLE COMMAND STRUCTURE                                                   */
 /* -------------------------------------------------------------------------- */
-import { prompt } from 'enquirer';
-import chalk from 'chalk';
-import { source, select_target_extension } from '../utils/prompt';
-import { files, checkFileExistence } from '../utils';
 import util from 'util';
 import fs from 'fs';
 import path from 'path';
+import chalk from 'chalk';
+import { prompt } from 'enquirer';
+import { source, select_target_extension } from '../utils/prompt';
+import { files, checkFileExistence } from '../utils';
 
 interface TResponse {
     source: string;
@@ -26,7 +26,7 @@ export const changeFileExtension = async (file_path: string, extension: string) 
     if (current_extension.length > 0) {
         const new_path = file_path.replace(current_extension, `.${new_extension}`);
         await rename(file_path, new_path);
-        console.log(chalk.green('    ✔ Done'));
+        console.log(chalk.green('    ✔ File Extension Changed.'));
     }
 };
 
@@ -38,7 +38,6 @@ const changeExtension = (program: any) => {
         .option('-e, --extension [ext]', 'Target Extension')
         .action(async (options: any, stdout: any) => {
             const hasDot = stdout.args.includes('.');
-            console.log(options);
             const questions = [];
             const response: TResponse = {
                 extension: 'tsx',
@@ -60,7 +59,7 @@ const changeExtension = (program: any) => {
                 response.source = prp.source;
             } else {
                 response.extension = options.extension;
-                response.source = options.source;
+                response.source = hasDot ? process.cwd() : options.source;
             }
 
             // Process Files
