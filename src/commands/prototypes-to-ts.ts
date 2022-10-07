@@ -33,10 +33,10 @@ const toTS = (program: any) => {
     program
         .command('pts')
         .description('Migrate from js(x) to ts(x)')
-        .option('-s, --source [source]', 'Source to the file(s)')
-        .option('-e, --extension [extension]', 'Change extension of the file')
+        .option('-s, --source <source>', 'Source to the file(s)')
+        .option('-e, --extension <extension>', 'Change extension of the file')
         .action(async (options: any, stdout: any) => {
-            const response: TResponse = await handleResponse(options, stdout, ['source']);
+            const response: TResponse = await handleResponse(options, stdout, ['source', 'extension']);
             
             // Process Files
             const inputFiles = files(response.source);

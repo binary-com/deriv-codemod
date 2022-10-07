@@ -58,13 +58,19 @@ const handleResponse = async (options, stdout, q) => {
   const response = {
     extension: '',
     source: ''
-  }; // Add Questions
+  };
+  Object.keys(options).forEach(key => {
+    if (options[key].startsWith('-')) {
+      console.log(chalk__default["default"].red(`Invalid arguments passed to: ${key}`));
+      process.exit(1);
+    }
+  }); // Add Questions
 
   if (!options.source && hasDot === false && q.includes('source')) {
     questions.push(source);
   }
 
-  if (!options.extension && q.includes('extension')) {
+  if (!options.extension && q.includes('extension') || typeof options.extension === 'boolean') {
     questions.push(select_target_extension);
   } // Assign Response
 
@@ -161,8 +167,8 @@ const runJscodeshift = async (file_path, file_extension) => {
 };
 
 const toTS = program => {
-  program.command('pts').description('Migrate from js(x) to ts(x)').option('-s, --source [source]', 'Source to the file(s)').option('-e, --extension [extension]', 'Change extension of the file').action(async (options, stdout) => {
-    const response = await handleResponse(options, stdout, ['source']); // Process Files
+  program.command('pts').description('Migrate from js(x) to ts(x)').option('-s, --source <source>', 'Source to the file(s)').option('-e, --extension <extension>', 'Change extension of the file').action(async (options, stdout) => {
+    const response = await handleResponse(options, stdout, ['source', 'extension']); // Process Files
 
     const inputFiles = files(response.source);
     await checkFileExistence(inputFiles, true); // Run Command

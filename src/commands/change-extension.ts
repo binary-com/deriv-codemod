@@ -27,8 +27,8 @@ const changeExtension = (program: any) => {
     program
         .command('ext')
         .description('Change extension of the file(s)')
-        .option('-s, --source [source]', 'Source to the file(s)')
-        .option('-e, --extension [ext]', 'Target Extension')
+        .option('-s, --source <source>', 'Source to the file(s)')
+        .option('-e, --extension <ext>', 'Target Extension')
         .action(async (options: any, stdout: any) => {
             const response: TResponse = await handleResponse(options, stdout, ['source', 'extension']);
 

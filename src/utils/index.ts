@@ -3,6 +3,7 @@
 /* -------------------------------------------------------------------------- */
 import fg from 'fast-glob';
 import isGitDirty from 'is-git-dirty';
+import chalk from 'chalk';
 import path from 'path';
 import { prompt } from 'enquirer';
 import { source, select_target_extension } from '../utils/prompt';
@@ -20,11 +21,18 @@ export const handleResponse = async (options: any, stdout: any, q: string[]) => 
         source   : '',
     };
 
+    Object.keys(options).forEach((key) => {
+        if (options[key].startsWith('-')) {
+            console.log(chalk.red(`Invalid arguments passed to: ${key}`));
+            process.exit(1);
+        }
+    });
+
     // Add Questions
-    if (!options.source && hasDot === false && q.includes('source')) {
+    if (!options.source && hasDot === false && q.includes('source') || typeof options.source === 'boolean') {
         questions.push(source);
     }
-    if (!options.extension && q.includes('extension')) {
+    if (!options.extension && q.includes('extension') || typeof options.extension === 'boolean') {
         questions.push(select_target_extension);
     }
 
