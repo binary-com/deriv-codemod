@@ -54,7 +54,6 @@ const select_target_extension = {
 /* -------------------------------------------------------------------------- */
 const handleResponse = async (options, stdout, q) => {
   const hasDot = stdout.args.includes('.');
-  const questions = [];
   const response = {
     extension: '',
     source: ''
@@ -64,24 +63,21 @@ const handleResponse = async (options, stdout, q) => {
       console.log(chalk__default["default"].red(`Invalid arguments passed to: ${key}`));
       process.exit(1);
     }
-  }); // Add Questions
+  }); // Source
 
   if (!options.source && hasDot === false && q.includes('source') || typeof options.source === 'boolean') {
-    questions.push(source);
-  }
+    const q_res = await enquirer.prompt(source);
+    response.source = q_res.source;
+  } else if (hasDot || options.source) {
+    response.source = hasDot ? process.cwd() : options.source;
+  } // Extension
+
 
   if (!options.extension && q.includes('extension') || typeof options.extension === 'boolean') {
-    questions.push(select_target_extension);
-  } // Assign Response
-
-
-  if (questions.length) {
-    const prp = await enquirer.prompt(questions);
-    response.extension = prp.extension;
-    response.source = prp.source;
-  } else {
+    const q_res = await enquirer.prompt(select_target_extension);
+    response.extension = q_res.extension;
+  } else if (options.extension) {
     response.extension = options.extension;
-    response.source = hasDot ? process.cwd() : options.source;
   }
 
   return response;
@@ -172,7 +168,7 @@ const toTS = program => {
     await checkFileExistence(inputFiles, true); // Run Command
 
     let i = 1;
-    console.log(chalk__default["default"].yellow(`Migrating files to TypeScript ${chalk__default["default"].green.bold(response.extension)}:`));
+    console.log(chalk__default["default"].yellow('Migrating files to TypeScript:'));
 
     for await (const file of inputFiles) {
       console.log(chalk__default["default"].blue(`${i}/${inputFiles.length} File: ${file}`));

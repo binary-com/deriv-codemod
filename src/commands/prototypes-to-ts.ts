@@ -44,7 +44,7 @@ const toTS = (program: any) => {
 
             // Run Command
             let i = 1;
-            console.log(chalk.yellow(`Migrating files to TypeScript ${chalk.green.bold(response.extension)}:`));
+            console.log(chalk.yellow('Migrating files to TypeScript:'));
             for await (const file of inputFiles) {
                 console.log(chalk.blue(`${i}/${inputFiles.length} File: ${file}`));
                 await runJscodeshift(file, response.extension);

@@ -15,7 +15,6 @@ export type TResponse = {
 
 export const handleResponse = async (options: any, stdout: any, q: string[]) => {
     const hasDot = stdout.args.includes('.');
-    const questions = [];
     const response: TResponse = {
         extension: '',
         source   : '',
@@ -28,22 +27,20 @@ export const handleResponse = async (options: any, stdout: any, q: string[]) => 
         }
     });
 
-    // Add Questions
+    // Source
     if (!options.source && hasDot === false && q.includes('source') || typeof options.source === 'boolean') {
-        questions.push(source);
-    }
-    if (!options.extension && q.includes('extension') || typeof options.extension === 'boolean') {
-        questions.push(select_target_extension);
+        const q_res: TResponse = await prompt(source);
+        response.source = q_res.source;
+    } else if (hasDot || options.source) {
+        response.source = hasDot ? process.cwd() : options.source;
     }
 
-    // Assign Response
-    if (questions.length) {
-        const prp: TResponse = await prompt(questions);
-        response.extension = prp.extension;
-        response.source = prp.source;
-    } else {
+    // Extension
+    if (!options.extension && q.includes('extension') || typeof options.extension === 'boolean') {
+        const q_res: TResponse = await prompt(select_target_extension);
+        response.extension = q_res.extension;
+    } else if (options.extension) {
         response.extension = options.extension;
-        response.source = hasDot ? process.cwd() : options.source;
     }
 
     return response;
