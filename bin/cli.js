@@ -66,7 +66,7 @@ const handleResponse = async (options, stdout, q) => {
     }
   }); // Add Questions
 
-  if (!options.source && hasDot === false && q.includes('source')) {
+  if (!options.source && hasDot === false && q.includes('source') || typeof options.source === 'boolean') {
     questions.push(source);
   }
 
@@ -92,7 +92,6 @@ const files = source => {
     ignore: ['**/node_modules/**']
   });
 };
-
 const checkFileExistence = (files, checkGit) => {
   if (files.length === 0) {
     process.stderr.write('Error: No files found. Please check the path option.\n');
@@ -103,7 +102,6 @@ const checkFileExistence = (files, checkGit) => {
     checkGitDirty(files);
   }
 };
-
 const checkGitDirty = files => {
   return isGitDirty__default["default"](path__default["default"].dirname(files[0]));
 };
@@ -122,7 +120,7 @@ const changeFileExtension = async (file_path, extension) => {
 };
 
 const changeExtension = program => {
-  program.command('ext').description('Change extension of the file(s)').option('-s, --source [source]', 'Source to the file(s)').option('-e, --extension [ext]', 'Target Extension').action(async (options, stdout) => {
+  program.command('ext').description('Change extension of the file(s)').option('-s, --source <source>', 'Source to the file(s)').option('-e, --extension <ext>', 'Target Extension').action(async (options, stdout) => {
     const response = await handleResponse(options, stdout, ['source', 'extension']); // Process Files
 
     const inputFiles = files(response.source);
